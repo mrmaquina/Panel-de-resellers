@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel VIP Resellers - VPS ARG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS GENERALES Y PALETA DE COLORES --- */
+        :root {
+            --bg-principal: #150025; /* Púrpura muy profundo (Fondo con vida) */
+            --bg-card: #1f0535;      /* Un púrpura un poco más claro para tarjetas */
+            --color-texto: #ffffff;
+            --color-resaltado: #ffe600; /* Amarillo extra para datos clave */
+            
+            /* Colores Vibrantes solicitados */
+            --violeta-neon: #9d00ff;
+            --naranja-neon: #ff6600;
+            --verde-neon: #00ff88;
+            --celeste-neon: #00e5ff;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; /* Fuente moderna y limpia */
+            background-color: var(--bg-principal); 
+            color: var(--color-texto); 
+            text-align: center; 
+            margin: 0; 
+            padding: 20px; 
+            background-image: radial-gradient(circle at 50% 50%, #2a0a4a 0%, #150025 100%); /* Efecto de luz en fondo */
+        }
+
+        .container { max-width: 1000px; margin: auto; padding-bottom: 50px; }
+
+        /* --- TÍTULOS --- */
+        h1 { 
+            font-weight: 800; 
+            font-size: 2.5em; 
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--celeste-neon), var(--verde-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+        }
+
+        .subtitle { font-size: 1.1em; opacity: 0.8; margin-bottom: 40px; }
+
+        /* --- GRILLA Y TARJETAS --- */
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
+
+        .card { 
+            background-color: var(--bg-card); 
+            border-radius: 16px; 
+            padding: 25px; 
+            width: 210px; 
+            border: 2px solid transparent; /* Borde base */
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efecto Hover Generico */
+        .card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Colores específicos por tipo de tarjeta usando los bordes */
+        /* Grupo SS: Violeta y Naranja */
+        .card-ss-1 { border-color: var(--violeta-neon); box-shadow: 0 0 15px rgba(157, 0, 255, 0.3); }
+        .card-ss-2 { border-color: var(--naranja-neon); box-shadow: 0 0 15px rgba(255, 102, 0, 0.3); }
+        
+        /* Grupo Gamer: Verde y Celeste */
+        .card-gamer-1 { border-color: var(--verde-neon); box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
+        .card-gamer-2 { border-color: var(--celeste-neon); box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
+
+        .card h3 { font-size: 1.4em; margin-top: 0; font-weight: 600; }
+        .card-ss-1 h3 { color: var(--violeta-neon); }
+        .card-ss-2 h3 { color: var(--naranja-neon); }
+        .card-gamer-1 h3 { color: var(--verde-neon); }
+        .card-gamer-2 h3 { color: var(--celeste-neon); }
+
+        .price-tag { 
+            font-size: 28px; 
+            font-weight: 800; 
+            color: var(--color-resaltado); 
+            margin: 15px 0;
+            text-shadow: 0 0 10px rgba(255, 230, 0, 0.5);
+        }
+
+        /* --- BOTONES DE PAGO --- */
+        .btn-pay { 
+            /* Degradado Naranja a Violeta solicitado indirectly */
+            background: linear-gradient(45deg, var(--naranja-neon), var(--violeta-neon)); 
+            color: white; 
+            padding: 14px; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            display: block; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-size: 0.9em;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-pay:hover { 
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.6);
+            background: linear-gradient(45deg, #ff8533, #b333ff); /* Un poco más claro al hover */
+        }
+
+        /* --- SECCIÓN DE ENTREGA (PANEL POST-PAGO) --- */
+        #delivery-section { 
+            display: none; /* Se activa con JS */
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 3px dashed var(--verde-neon); 
+            border-radius: 20px; 
+            padding: 40px; 
+            margin: 50px auto; 
+            max-width: 600px; 
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+            backdrop-filter: blur(5px); /* Efecto esmerilado moderno */
+        }
+
+        #delivery-section h2 { color: var(--verde-neon); font-weight: 800; margin-top: 0; }
+
+        .account-link-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #444;
+        }
+
+        .account-link { 
+            color: var(--color-resaltado); 
+            font-family: 'Roboto Mono', monospace; /* Fuente de código */
+            font-size: 1.1em; 
+            text-decoration: none;
+            word-break: break-all; 
+            display: block;
+        }
+
+        .info-text { font-size: 0.9em; opacity: 0.7; margin-bottom: 25px; }
+
+        /* --- BOTÓN WHATSAPP --- */
+        .btn-whatsapp { 
+            background-color: #25d366; 
+            color: white; 
+            padding: 16px 30px; 
+            border-radius: 50px; /* Redondeado */
+            text-decoration: none; 
+            display: inline-block; 
+            font-weight: 600; 
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-whatsapp:hover { 
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Panel VIP Resellers</h1>
+    <p class="subtitle">Adquiere tus cuentas pre-activadas al instante con 50% de Descuento.</p>
+
+    <div class="grid">
+        <div class="card card-ss-1">
+            <h3>Reseller SS</h3>
+            <div class="price-tag">50% OFF</div>
+            <a href="https://mpago.la/2tt43Hi" class="btn-pay">Pagar Servicio</a>
+        </div>
+
+        <div class="card card-ss-2">
+            <h3>Reseller SS BR</h3>
+            <div class="price-tag">50% OFF</div>
+            <a href="https://mpago.la/2y8B4af" class="btn-pay">Pagar Servicio</a>
+        </div>
+
+        <div class="card card-gamer-1">
+            <h3>Gamer Premium</h3>
+            <div class="price-tag">50% OFF</div>
+            <a href="https://mpago.la/21ieVrZ" class="btn-pay">Pagar Servicio</a>
+        </div>
+
+        <div class="card card-gamer-2">
+            <h3>Gamer BR</h3>
+            <div class="price-tag">50% OFF</div>
+            <a href="https://mpago.la/1zAfGFC" class="btn-pay">Pagar Servicio</a>
+        </div>
+    </div>
+
+    <div id="delivery-section">
+        <h2>¡PAGO CONFIRMADO!</h2>
+        <p>Tu cuenta ya está activa en la VPS. Accede a tus credenciales aquí:</p>
+        
+        <div class="account-link-box">
+            <a href="#" id="final-link" class="account-link" target="_blank">Obteniendo link de cuenta...</a>
+        </div>
+        
+        <p class="info-text">Por favor, haz clic en el siguiente botón para informarnos tu pago por WhatsApp y asegurar la reposición del stock.</p>
+        <a id="ws-notify" href="#" class="btn-whatsapp">Notificar Pago a Emanuel</a>
+    </div>
+</div>
+
+<script>
+    // --- CONFIGURACIÓN DE TU STOCK ---
+    // Aquí pegas los links que generas en https://vpsarg.netlify.app/
+    const linksDeCuentas = {
+        'default': 'https://vpsarg.netlify.app/v?u=admin&p=1234' // Reemplazar por link real
+    };
+
+    // Lógica para detectar el regreso de Mercado Pago
+    window.onload = function() {
+        // Obtenemos los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Verificamos si Mercado Pago nos devolvió con '?pago=exitoso'
+        if (urlParams.get('pago') === 'exitoso') {
+            
+            // 1. Mostramos la sección de entrega
+            const deliverySection = document.getElementById('delivery-section');
+            deliverySection.style.display = 'block';
+            
+            // 2. Cargamos el link de la cuenta (usando el default por ahora)
+            const miCuentaGenerada = linksDeCuentas['default']; 
+            const finalLinkAnchor = document.getElementById('final-link');
+            
+            finalLinkAnchor.href = miCuentaGenerada;
+            finalLinkAnchor.innerText = miCuentaGenerada;
+
+            // 3. Configuramos el mensaje de WhatsApp automático
+            const mensajeWS = "Hola Emanuel, acabo de realizar un pago de Reseller en el panel VIP y ya recibí mi cuenta activa.";
+            document.getElementById('ws-notify').href = `https://wa.me/3434541192?text=${encodeURIComponent(mensajeWS)}`;
+            
+            // 4. Desplazar la pantalla suavemente hasta la sección de entrega para que la vean
+            deliverySection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+</script>
+
+</body>
+</html>
